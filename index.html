@@ -1,0 +1,1901 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulação de Consórcio - Sicredi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Exo 2', sans-serif;
+            margin: 0;
+            padding: 10px;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .info-table select {
+            text-align: center;
+        }
+        .info-table td:nth-child(2) select {
+            width: 100%;
+            text-align: center;
+            margin: 0 auto;
+            display: block;
+        }
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 100%;
+            max-width: 800px;
+        }
+        
+        #percentual-lance-embutido {  
+            width: 90%;  
+            padding: 8px;  
+            border: 3px solid #146e37;  
+            border-radius: 4px;  
+            font-family: 'Exo 2', sans-serif;  
+            font-weight: 700;  
+            color: #0a0a0a;
+            background-color: transparent;
+        }  
+        .consorcio-card {
+            width: 100%;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border-top: 6px solid #146e37;
+        }
+        
+        .header {
+            background-color: #146e37;
+            color: rgb(255, 255, 255);
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        
+        .header h2 {
+            margin: 3px 0 0 0;
+            font-size: 18px;
+            font-weight: 700;
+        }
+        
+        .content {
+            padding: 15px;
+        }
+    
+        .slogan {
+            font-size: 14px;
+            margin-bottom: 15px;
+            line-height: 1.4;
+            color: #333;
+            font-weight: 700;
+            text-align: center;
+        }
+        
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+        
+        .info-table tr {
+            border-bottom: 1px solid #eee;
+        }
+        
+        .info-table td {
+            padding: 8px 0;
+            vertical-align: middle;
+        }
+        
+        .info-table td:first-child {
+            font-weight: 700;
+            color: #333;
+            width: 50%;
+        }
+        
+        .info-table td:last-child {
+            text-align: right;
+            color: #146e37;
+            font-weight: 700;
+        }
+        
+        .info-table input, .info-table select {
+            width: auto;
+            border: none;
+            border-bottom: 1px solid #146e37;
+            font-size: 15px;
+            font-weight: 700;
+            color: #003366;
+            padding: 4px 0;
+            background-color: #e2e0df;
+            font-family: 'Exo 2', sans-serif;
+            text-align: right;
+        }
+        
+        .info-table select {
+            text-align: center;
+            margin: 0 auto;
+            display: block;
+            width: 50%;
+        }
+        
+        .divider {
+            height: 1px;
+            background-color: #eee;
+            margin: 15px 0;
+        }
+        
+        .section-title {
+            font-size: 14px;
+            color: #146e37;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: 700;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .form-group {
+            flex: 1;
+        }
+        
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            color: #0e0d0d;
+            margin-bottom: 4px;
+        }
+        
+        .form-group input {
+            width: 90%;
+            padding: 8px;
+            border: 3px solid #146e37;
+            border-radius: 4px;
+            font-family: 'Exo 2', sans-serif;
+            font-weight: 700;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .checkbox-group input[type="checkbox"],
+        .checkbox-group input[type="radio"] {
+            margin: 0;
+            
+        }
+        
+        .checkbox-group label {
+            font-size: 18px;
+            color: #146E37;
+            
+        }
+        
+        .button {
+            width: 100%;
+            padding: 12px;
+            background-color: #146e37;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-family: 'Exo 2', sans-serif;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 15px 0;
+            transition: background-color 0.3s;
+        }
+        
+        .button:hover {
+            background-color: #0d5229;
+        }
+        
+        .button-comparar {
+            background-color: #146E37;
+        }
+        
+        .button-comparar:hover {
+            background-color: #3fa110;
+        }
+        
+        .logos-footer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-top: 20px;
+            padding: 8px 0;
+        }
+        
+        .logos-footer img {
+            height: 25px;
+            width: auto;
+            object-fit: contain;
+        }
+        
+        .branch {
+            font-size: 12px;
+            text-align: center;
+            margin-top: 8px;
+            font-style: italic;
+            color: #146e37;
+            font-weight: 700;
+        }
+        
+        .info-label {
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .info-label:hover {
+            color: #146e37;
+            text-decoration: underline dotted;
+        }
+        
+        .tooltip {
+            position: absolute;
+            background-color: #146e37;
+            color: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            max-width: 250px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 100;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            pointer-events: none;
+            font-weight: normal;
+            line-height: 1.4;
+        }
+        
+        .tooltip.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .tooltip:after {
+            content: '';
+            position: absolute;
+            bottom: 100%;
+            left: 20px;
+            border-width: 8px;
+            border-style: solid;
+            border-color: transparent transparent #146e37 transparent;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 1200px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close:hover {
+            color: black;
+        }
+        
+        .comparison-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .comparison-row {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .comparison-chart {
+            flex: 1;
+            min-width: 300px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .comparison-form {
+            flex: 1;
+            min-width: 300px;
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        
+        .comparison-table th, .comparison-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        .comparison-table th {
+            background-color: #146e37;
+            color: white;
+        }
+        
+        .comparison-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        
+        .consorcio-highlight {
+            background-color: #e8f5e9 !important;
+        }
+        
+        .financiamento-highlight {
+            background-color: #e3f2fd !important;
+        }
+        
+        .requisitos-container {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #146e37;
+        }
+        
+        .requisitos-title {
+            font-weight: bold;
+            color: #146e37;
+            margin-bottom: 10px;
+        }
+        
+        .requisitos-content {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .requisito-item {
+            flex: 1;
+            padding: 10px;
+        }
+        
+        .requisito-item strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .chart-header {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 8px 8px 0 0;
+            margin-bottom: 10px;
+            font-size: 14px;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        
+        .chart-data-label {  
+            font-size: 12px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .investment-analysis {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+            border-left: 4px solid #146e37;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        
+        .investment-analysis h4 {
+            color: #146e37;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+        
+        .investment-analysis p {
+            margin: 5px 0;
+            line-height: 1.6;
+        }
+        
+        .highlight-green {
+            color: #146e37;
+            font-weight: bold;
+        }
+        
+        .highlight-red {
+            color: #ff6b6b;
+            font-weight: bold;
+        }
+        
+        .investment-input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .investment-input-group .form-group {
+            flex: 1;
+        }
+        
+        @media (max-width: 768px) {
+            .tooltip {
+                max-width: 200px;
+                font-size: 13px;
+            }
+            
+            .comparison-row {
+                flex-direction: column;
+            }
+            
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
+            }
+            
+            .requisitos-content {
+                flex-direction: column;
+            }
+            
+            .investment-input-group {
+                flex-direction: column;
+                gap: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="consorcio-card">
+            <div class="header">
+                <h1>SIMULAÇÃO DE CONSÓRCIO</h1>
+            </div>
+            <div class="content">
+                <table class="info-table">
+                    <tr>
+                        <td>
+                            <span class="info-label" data-tooltip="Digite o valor da carta de crédito ou total do projeto">VALOR DO CRÉDITO:</span>
+                        </td> 
+                        <td><input type="text" id="valor-credito" value="100000,00" oninput="formatarMoeda(this); calcularSaldoPagar()"></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="info-label" data-tooltip="Tipo do consórcio que será adquirido">SEGMENTO:</span>
+                        </td>
+                        <td>
+                            <select id="segmento" onchange="atualizarTaxas()" style="text-align: center; margin: 0 auto; display: block;">
+                                <option value="Produto" selected>Selecione</option>
+                                <option value="Automóvel - 48">Automóvel - 48</option>
+                                <option value="Automóvel - 60">Automóvel - 60</option>
+                                <option value="Automóvel - 75">Automóvel - 75</option>
+                                <option value="Automóvel - 100">Automóvel - 100</option>
+                                <option value="Pesados - 100">Pesados - 100</option>
+                                <option value="Pesados - 120">Pesados - 120</option>
+                                <option value="Imóveis - 180">Imóveis - 180</option>
+                                <option value="Serviços">Serviços</option>
+                                <option value="Motocicletas">Motocicletas</option>
+                                <option value="Móveis Planejados">Móveis Planejados</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="info-label" data-tooltip="Conceda o desconto de acordo com as regras do produto, que será sobre a Taxa de Administração">DESCONTO?</span>
+                        </td>
+                        <td><input type="text" id="desconto" value="0,00" oninput="formatarPorcentagem(this); atualizarTaxas()"></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="info-label" data-tooltip="Para Imóveis sobre o valor do saldo a pagar é 0,0450% por parcela, os demais 0,0552%.">PRESTAMISTA?</span>
+                        </td>
+                        <td>
+                            <select id="prestamista" onchange="calcularSaldoPagar()">
+                                <option value="NÃO">NÃO</option>
+                                <option value="SIM">SIM</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="info-label" data-tooltip="Total das taxas do fundo de reserva e taxa de administração">TX DE ADM + FR</span>
+                        </td>
+                        <td id="taxa-total">%</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="info-label" data-tooltip="Saldo atual com a taxa de administração e fundo de reserva">SALDO A PAGAR:</span>
+                        </td>
+                        <td id="saldo-pagar"></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="info-label" data-tooltip="Prazo restante do grupo">PRAZO:</span>
+                        </td>
+                        <td><input type="number" id="prazo" value="48" min="1" onchange="atualizarParcela()"></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="info-label" data-tooltip="Custo Total da Operação">CET:</span>
+                        </td>
+                        <td id="cet">%</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="info-label" data-tooltip="Valor da parcela com ou sem seguro">1ª PARCELA:</span>
+                        </td>
+                        <td id="primeira-parcela"></td>
+                    </tr>
+                </table>
+                <div class="divider"></div>
+                <div class="section-title">
+                    Insira o PERCENTUAL DE LANCE a ser ofertado, a ASSEMBLEIA na qual será feita a oferta e escolha se será utilizado LANCE EMBUTIDO ou não.
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="percentual-lance" class="info-label" data-tooltip="Digite o percentual total do lance que será ofertado">Percentual de Lance</label>
+                        <input type="number" id="percentual-lance" value="0" min="0" max="100" step="0.01" oninput="calcularPosContemplacao()">
+                    </div>
+                    <div class="form-group">
+                        <label for="numero-assembleia" class="info-label" data-tooltip="Número de assembleia que irá participar">Nº Assembléia</label>
+                        <input type="number" id="numero-assembleia" value="1" min="1">
+                    </div>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="lance-embutido" onchange="toggleLanceEmbutido()">
+                    <label for="lance-embutido">Lance Embutido</label>
+                    <div id="percentual-lance-embutido-container" style="display: none;">
+                        <input type="number" id="percentual-lance-embutido" value="0" min="0" max="25" step="0.01" oninput="calcularPosContemplacao()">
+                    </div>
+                </div>
+                <div class="checkbox-group">
+                    <input type="radio" id="diminuir-parcela" name="opcao" checked onchange="calcularPosContemplacao()">
+                    <label for="diminuir-parcela">Diminuir Parcela</label>
+                </div>
+                <div class="checkbox-group">
+                    <input type="radio" id="diminuir-prazo" name="opcao" onchange="calcularPosContemplacao()">
+                    <label for="diminuir-prazo">Diminuir Prazo</label>
+                </div>
+                
+                <div class="divider"></div>
+                <div class="section-title">Após Contemplação</div>
+                <table class="info-table">
+                    <tr>
+                        <td>LANCE OFERTADO:</td>
+                        <td id="lance-ofertado"></td>
+                    </tr>
+                    <tr>
+                        <td>RECURSOS PRÓPRIOS:</td>
+                        <td id="recursos-proprios"></td>
+                    </tr>
+                    <tr>
+                        <td>LANCE EMBUTIDO:</td>
+                        <td id="valor-lance-embutido"></td>
+                    </tr>
+                    <tr>
+                        <td>LÍQUIDO À RECEBER:</td>
+                        <td id="saldo-a-receber"></td>
+                    </tr>
+                    <tr>
+                        <td>1ª PARCELA:</td>
+                        <td id="parcela-pos"></td>
+                    </tr>
+                    <tr>
+                        <td>(pós pgto lance)</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>PRAZO:</td>
+                        <td id="prazo-pos"></td>
+                    </tr>
+                    <tr>
+                        <td>SALDO DEVEDOR:</td>
+                        <td id="saldo-devedor"></td>
+                    </tr>
+                    <tr>
+                        <td>PERCENTUAL PAGO:</td>
+                        <td id="percentual-pago">%</td>
+                    </tr>
+                </table>
+                
+                <button class="button button-comparar" onclick="abrirModalComparacao()">Comparar com Financiamento e Investimento</button>
+                
+                <div class="logos-footer">
+                    <img src="https://sicrediuniaomsto.coop.br/sites/default/files/Marca_0.png" alt="Sicredi União MS/TO">
+                </div>
+                <div class="branch">
+                    Sicredi União MS-TO<br>
+                    e Oeste da Bahia
+                </div>
+                <div>
+                    <br>
+                    <h2>          
+                    <span class="info-label" data-tooltip="Antes de falar em parcelas, carta de crédito ou taxa de administração, saca o que move o coração do seu associado. Ele quer uma casa? Um carro? Ampliar o negócio? Investir no futuro? Entender esse 'porquê' é seu ponto de partida. Venda um sonho possível, não só um produto financeiro.">Dúvida?:</span>
+                    </h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal de Comparação -->
+    <div id="modalComparacao" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="fecharModalComparacao()">&times;</span>
+            <h2>Comparação: Consórcio vs Financiamento vs Investimento</h2>
+            
+            <div class="comparison-container">
+                <div class="comparison-row">
+                    <div class="comparison-form">
+                        <h3>Parâmetros do Financiamento</h3>
+                        <div class="form-group">
+                            <label for="taxa-financiamento">Taxa de Juros Mensal (%):</label>
+                            <input type="number" id="taxa-financiamento" value="1.5" step="0.01" min="0.1">
+                        </div>
+                        <div class="form-group">
+                            <label for="tipo-cliente">Tipo de Cliente:</label>
+                            <select id="tipo-cliente">
+                                <option value="PF">Pessoa Física</option>
+                                <option value="PJ">Pessoa Jurídica</option>
+                            </select>
+                        </div>
+                        <button class="button" onclick="compararFinanciamento()">Comparar Financiamento</button>
+                    </div>
+                    
+                    <div class="comparison-chart">
+                        <div class="chart-header">
+                            <div id="requisitos-parcela"></div>
+                        </div>
+                        <canvas id="chartParcelas"></canvas>
+                    </div>
+                </div>
+                
+                <div class="comparison-row">
+                    <div class="comparison-chart">
+                        <div class="chart-header">
+                            <div id="requisitos-prazo"></div>
+                        </div>
+                        <canvas id="chartPrazos"></canvas>
+                    </div>
+                    
+                    <div class="comparison-chart">
+                        <div class="chart-header">
+                            <div id="requisitos-custo"></div>
+                        </div>
+                        <canvas id="chartCustos"></canvas>
+                    </div>
+                </div>
+                
+                <!-- Seção de Investimento Personalizado -->
+                <div class="comparison-row">
+                    <div class="comparison-form">
+                        <h3>Comparação com Investimento Personalizado</h3>
+                        <div class="investment-input-group">
+                            <div class="form-group">
+                                <label for="valor-aplicacao">Valor Inicial (R$):</label>
+                                <input type="text" id="valor-aplicacao" value="50.000,00" oninput="formatarMoeda(this)">
+                            </div>
+                            <div class="form-group">
+                                <label for="aporte-mensal">Aporte Mensal (R$):</label>
+                                <input type="text" id="aporte-mensal" value="1.000,00" oninput="formatarMoeda(this)">
+                            </div>
+                        </div>
+                        <div class="investment-input-group">
+                            <div class="form-group">
+                                <label for="taxa-selic">Taxa Selic (% a.a.):</label>
+                                <input type="number" id="taxa-selic" value="10.50" step="0.01" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label for="taxa-di">Taxa DI (% a.a.):</label>
+                                <input type="number" id="taxa-di" value="10.40" step="0.01" min="0">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="percentual-di">Percentual do DI para aplicação (%):</label>
+                            <input type="number" id="percentual-di" value="100" step="1" min="0" max="100">
+                        </div>
+                        <button class="button" onclick="compararInvestimentoPersonalizado()">Comparar Investimento</button>
+                    </div>
+                    
+                    <div class="comparison-chart">
+                        <div class="chart-header">
+                            <div id="requisitos-investimento"></div>
+                        </div>
+                        <canvas id="chartInvestimento"></canvas>
+                    </div>
+                </div>
+                
+                <div class="comparison-row">
+                    <div class="comparison-chart">
+                        <div class="chart-header">
+                            <div id="requisitos-pos"></div>
+                        </div>
+                        <canvas id="chartPosContemplacao"></canvas>
+                    </div>
+                </div>
+                
+                <div class="comparison-row">
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Consórcio</th>
+                                <th>Financiamento</th>
+                                <th>Diferença</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabela-comparacao">
+                            <!-- Preenchido pelo JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Tabela de Investimento -->
+                <div class="comparison-row">
+                    <table class="comparison-table" id="tabela-investimento">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Consórcio</th>
+                                <th>Investimento</th>
+                                <th>Diferença</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabela-comparacao-investimento">
+                            <!-- Preenchido pelo JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Container para explicação do investimento -->
+                <div class="investment-analysis" id="explicacao-investimento">
+                    <h4>Análise de Investimento Personalizado</h4>
+                    <p>Preencha os valores e clique em "Comparar Investimento" para ver a análise detalhada.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Dados das taxas por segmento
+        const taxasPorSegmento = {
+            'Produto': { adm: 0.00, fr: 0.00, prestamista: 0 },
+            'Automóvel - 48': { adm: 8.00, fr: 2.00, prestamista: 0.0552 },
+            'Automóvel - 60': { adm: 10.00, fr: 2.00, prestamista: 0.0552 },
+            'Automóvel - 75': { adm: 10.00, fr: 2.00, prestamista: 0.0552 },
+            'Automóvel - 100': { adm: 12.00, fr: 2.00, prestamista: 0.0552 },
+            'Motocicletas': { adm: 13.00, fr: 3.00, prestamista: 0.0552 },
+            'Pesados - 100': { adm: 9.00, fr: 2.50, prestamista: 0.0552 },
+            'Pesados - 120': { adm: 9.00, fr: 2.50, prestamista: 0.0552 },
+            'Imóveis - 180': { adm: 14.00, fr: 2.00, prestamista: 0.0450 },
+            'Serviços': { adm: 16.00, fr: 3.00, prestamista: 0.0552 },
+            'Móveis Planejados': { adm: 16.00, fr: 3.00, prestamista: 0.0552 }
+        };
+
+        // Variáveis para armazenar os dados de comparação
+        let dadosConsorcio = {};
+        let dadosFinanciamento = {};
+        let dadosPosContemplacao = {};
+        
+        // Sistema de Tooltips
+        document.addEventListener('DOMContentLoaded', function() {
+            const infoLabels = document.querySelectorAll('.info-label');
+            
+            infoLabels.forEach(label => {
+                const tooltipText = label.getAttribute('data-tooltip');
+                if (tooltipText) {
+                    const tooltip = document.createElement('div');
+                    tooltip.className = 'tooltip';
+                    tooltip.textContent = tooltipText;
+                    document.body.appendChild(tooltip);
+                    
+                    label.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        
+                        document.querySelectorAll('.tooltip.active').forEach(t => {
+                            t.classList.remove('active');
+                        });
+                        
+                        const rect = label.getBoundingClientRect();
+                        tooltip.style.left = `${rect.left}px`;
+                        tooltip.style.top = `${rect.top - tooltip.offsetHeight - 10}px`;
+                        
+                        tooltip.classList.add('active');
+                    });
+                }
+            });
+            
+            document.addEventListener('click', function() {
+                document.querySelectorAll('.tooltip.active').forEach(tooltip => {
+                    tooltip.classList.remove('active');
+                });
+            });
+            
+            atualizarTaxas();
+            calcularSaldoPagar();
+            calcularPosContemplacao();
+        });
+
+        function getTaxaPrestamista() {
+            const segmento = document.getElementById('segmento').value;
+            return taxasPorSegmento[segmento]?.prestamista / 100 || 0;
+        }
+
+        function toggleLanceEmbutido() {
+            const checkbox = document.getElementById('lance-embutido');
+            const container = document.getElementById('percentual-lance-embutido-container');
+            const campoLance = document.getElementById('percentual-lance-embutido');
+            
+            if (checkbox.checked) {
+                container.style.display = 'block';
+            } else {
+                container.style.display = 'none';
+                campoLance.value = '0';
+            }
+            calcularPosContemplacao();
+        }
+        
+        function formatarMoedaValor(valor) {
+            return 'R$ ' + valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        function formatarMoedaParaNumero(valor) {
+            if (typeof valor === 'string') {
+                return parseFloat(valor.replace(/\./g, '').replace(',', '.'));
+            }
+            return valor;
+        }
+
+        function atualizarParcela() {
+            const saldoPagar = parseFloat(document.getElementById('saldo-pagar').textContent.replace(/[^\d,]/g, '').replace(',', '.')) || 0;
+            const prazo = parseInt(document.getElementById('prazo').value) || 0;
+            const prestamista = document.getElementById('prestamista').value === 'SIM';
+
+            if (saldoPagar > 0 && prazo > 0) {
+                let primeiraParcela = saldoPagar / prazo;
+                
+                if (prestamista) {
+                    const saldoTemporario = saldoPagar - primeiraParcela;
+                    const taxaPrestamista = saldoTemporario * getTaxaPrestamista();
+                    primeiraParcela += taxaPrestamista;
+                }
+                
+                document.getElementById('primeira-parcela').textContent = formatarMoedaValor(primeiraParcela);
+                calcularPosContemplacao();
+            }
+        }
+
+        function calcularPosContemplacao() {
+            const valorCredito = formatarMoedaParaNumero(document.getElementById('valor-credito').value) || 0;
+            const saldoPagar = parseFloat(document.getElementById('saldo-pagar').textContent.replace(/[^\d,]/g, '').replace(',', '.')) || 0;
+            const primeiraParcela = parseFloat(document.getElementById('primeira-parcela').textContent.replace(/[^\d,]/g, '').replace(',', '.')) || 0;
+            const percentualLance = parseFloat(document.getElementById('percentual-lance').value) || 0;
+            const prazoAtual = parseInt(document.getElementById('prazo').value) || 0;
+            const prestamista = document.getElementById('prestamista').value === 'SIM';
+            
+            const lanceEmbutidoCheckbox = document.getElementById('lance-embutido');
+            const percentualLanceEmbutido = parseFloat(document.getElementById('percentual-lance-embutido').value) || 0;
+            const lanceEmbutido = lanceEmbutidoCheckbox.checked ? valorCredito * (percentualLanceEmbutido / 100) : 0;
+
+            if (saldoPagar > 0 && prazoAtual > 0) {
+                const lanceOfertado = percentualLance > 0 ? saldoPagar * (percentualLance / 100) : 0;
+                let saldoDevedor = saldoPagar - primeiraParcela - lanceOfertado;
+
+                const recursosProprios = lanceOfertado - lanceEmbutido;
+
+                const diminuirPrazo = document.getElementById('diminuir-prazo').checked;
+                let novoPrazo, novaParcela;
+
+                if (diminuirPrazo) {
+                    novoPrazo = Math.max(1, Math.floor(saldoDevedor / primeiraParcela));
+                    novaParcela = primeiraParcela;
+                } else {
+                    novoPrazo = prazoAtual - 1;
+                    novaParcela = saldoDevedor / novoPrazo;
+                    
+                    if (prestamista && !isNaN(novaParcela)) {
+                        const taxaPrestamista = novaParcela * getTaxaPrestamista();
+                        novaParcela += taxaPrestamista;
+                    }
+                }
+
+                const percentualPago = ((lanceOfertado + primeiraParcela) / saldoPagar) * 100;
+                const saldoReceber = valorCredito - lanceEmbutido;
+
+                document.getElementById('lance-ofertado').textContent = formatarMoedaValor(lanceOfertado);
+                document.getElementById('recursos-proprios').textContent = formatarMoedaValor(Math.max(0, recursosProprios));
+                document.getElementById('valor-lance-embutido').textContent = formatarMoedaValor(lanceEmbutido);
+                document.getElementById('saldo-a-receber').textContent = formatarMoedaValor(Math.max(0, saldoReceber));
+                document.getElementById('parcela-pos').textContent = formatarMoedaValor(Math.max(0, novaParcela));
+                document.getElementById('prazo-pos').textContent = novoPrazo || 0;
+                document.getElementById('saldo-devedor').textContent = formatarMoedaValor(Math.max(0, saldoDevedor));
+                document.getElementById('percentual-pago').textContent = percentualPago.toFixed(2) + '%';
+                
+                dadosConsorcio = {
+                    valorCredito: valorCredito,
+                    saldoPagar: saldoPagar,
+                    prazo: prazoAtual,
+                    parcela: primeiraParcela,
+                    cet: parseFloat(document.getElementById('cet').textContent.replace('%', '').replace(',', '.')) || 0
+                };
+                
+                dadosPosContemplacao = {
+                    saldoPagar: saldoDevedor,
+                    prazo: novoPrazo,
+                    parcela: novaParcela,
+                    recursosProprios: recursosProprios,
+                    lanceEmbutido: lanceEmbutido,
+                    saldoReceber: saldoReceber
+                };
+            }
+        }
+
+        function calcularSaldoPagar() {
+            const valorCredito = formatarMoedaParaNumero(document.getElementById('valor-credito').value) || 0;
+            const taxaTotal = parseFloat(document.getElementById('taxa-total').textContent.replace('%', '').replace(',', '.')) || 0;
+
+            if (valorCredito > 0 && taxaTotal > 0) {
+                const saldoPagar = valorCredito * (1 + (taxaTotal / 100));
+                document.getElementById('saldo-pagar').textContent = formatarMoedaValor(saldoPagar);
+
+                const prazo = parseInt(document.getElementById('prazo').value) || 0;
+                if (prazo > 0) {
+                    let primeiraParcela = saldoPagar / prazo;
+                    
+                    const prestamista = document.getElementById('prestamista').value === 'SIM';
+                    if (prestamista) {
+                        const saldoTemporario = saldoPagar - primeiraParcela;
+                        const taxaPrestamista = saldoTemporario * getTaxaPrestamista();
+                        primeiraParcela += taxaPrestamista;
+                    }
+                    
+                    document.getElementById('primeira-parcela').textContent = formatarMoedaValor(primeiraParcela);
+                }
+                
+                calcularPosContemplacao();
+            }
+        }
+
+        function formatarMoeda(input) {
+            let value = input.value.replace(/\D/g, '');
+            if (value === '') return;
+            value = (parseInt(value) / 100).toFixed(2);
+            value = value.replace('.', ',');
+            value = value.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+            input.value = value;
+        }
+
+        function formatarPorcentagem(input) {
+            let value = input.value.replace(/\D/g, '');
+            if (value === '') return;
+            value = (parseInt(value) / 100).toFixed(2);
+            input.value = value.replace('.', ',') + '%';
+        }
+
+        function atualizarTaxas() {
+            const segmentoSelect = document.getElementById('segmento');
+            const segmento = segmentoSelect.value;
+            const taxas = taxasPorSegmento[segmento];
+            
+            if (taxas) {
+                const prazoMatch = segmento.match(/\d+/);
+                if (prazoMatch) {
+                    document.getElementById('prazo').value = prazoMatch[0];
+                }
+
+                const descontoInput = document.getElementById('desconto');
+                const desconto = parseFloat(descontoInput.value.replace('%', '').replace(',', '.')) || 0;
+
+                const taxaAdmDescontada = taxas.adm * (1 - desconto / 100);
+                const taxaTotal = taxaAdmDescontada + taxas.fr;
+                document.getElementById('taxa-total').textContent = taxaTotal.toFixed(2).replace('.', ',') + '%';
+                document.getElementById('cet').textContent = taxaTotal.toFixed(2).replace('.', ',') + '%';
+
+                calcularSaldoPagar();
+            }
+        }
+        
+        function abrirModalComparacao() {
+            document.getElementById('modalComparacao').style.display = 'block';
+            compararFinanciamento();
+            compararInvestimentoPersonalizado();
+        }
+        
+        function fecharModalComparacao() {
+            document.getElementById('modalComparacao').style.display = 'none';
+        }
+        
+        function calcularFinanciamento(valor, prazo, taxaMensal, tipoCliente) {
+            const iofAliquotaFixa = 0.0038;
+            const iofAliquotaDiariaPF = 0.000082;
+            const iofAliquotaDiariaPJ = 0.00041;
+            const limiteAnualPF = 0.03;
+            const limiteAnualPJ = 0.015;
+            
+            const iofFixo = valor * iofAliquotaFixa;
+            
+            const diasOperacao = Math.min(prazo * 30, 365);
+            let iofDiario;
+            
+            if (tipoCliente === 'PF') {
+                const iofDiarioBruto = valor * iofAliquotaDiariaPF * diasOperacao;
+                iofDiario = Math.min(iofDiarioBruto, valor * limiteAnualPF);
+            } else {
+                const iofDiarioBruto = valor * iofAliquotaDiariaPJ * diasOperacao;
+                iofDiario = Math.min(iofDiarioBruto, valor * limiteAnualPJ);
+            }
+            
+            const iofTotal = iofFixo + iofDiario;
+            const valorFinanciado = valor + iofTotal;
+            
+            const taxaDecimal = taxaMensal / 100;
+            const parcelaFixa = valorFinanciado * 
+                               (taxaDecimal * Math.pow(1 + taxaDecimal, prazo)) / 
+                               (Math.pow(1 + taxaDecimal, prazo) - 1);
+            
+            const totalJuros = (parcelaFixa * prazo) - valorFinanciado;
+            const totalPagar = parcelaFixa * prazo;
+            
+            const cet = (Math.pow(totalPagar / valorFinanciado, 12 / prazo) - 1) * 100;
+            
+            let requisitos = {};
+            if (tipoCliente === 'PF') {
+                requisitos.rendaMinima = parcelaFixa * 3;
+                requisitos.tipo = "Renda Mínima";
+                requisitos.valorRequisito = requisitos.rendaMinima;
+            } else {
+                requisitos.faturamentoMinimo = parcelaFixa / 0.10;
+                requisitos.tipo = "Faturamento Mínimo";
+                requisitos.valorRequisito = requisitos.faturamentoMinimo;
+            }
+            
+            return {
+                valor: valorFinanciado,
+                prazo: prazo,
+                taxaMensal: taxaMensal,
+                parcela: parcelaFixa,
+                iofFixo: iofFixo,
+                iofDiario: iofDiario,
+                iofTotal: iofTotal,
+                totalJuros: totalJuros,
+                totalPagar: totalPagar,
+                cet: cet.toFixed(2),
+                tipoCliente: tipoCliente,
+                requisitos: requisitos
+            };
+        }
+    
+        function calcularFinanciamentoPosContemplacao(financiamentoOriginal, valorAbatido) {
+            const saldoDevedor = financiamentoOriginal.totalPagar - valorAbatido;
+            const prazoRestante = Math.max(1, financiamentoOriginal.prazo - 1);
+            
+            return {
+                ...financiamentoOriginal,
+                prazo: prazoRestante,
+                totalPagar: saldoDevedor,
+                valor: saldoDevedor
+            };
+        }
+        
+        function atualizarRequisitosFinanceiros(consorcio, financiamento, posConsorcio, posFinanciamento) {
+            const tipoCliente = financiamento.tipoCliente;
+            const formatar = valor => valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            
+            let htmlParcela = '';
+            
+            if (tipoCliente === 'PF') {
+                htmlParcela = `<strong>Pessoa Física:</strong> Renda mínima necessária - Consórcio: ${formatar(consorcio.parcela * 3)} | Financiamento: ${formatar(financiamento.parcela * 3)}`;
+            } else {
+                htmlParcela = `<strong>Pessoa Jurídica:</strong> Faturamento mínimo necessário - Consórcio: ${formatar(consorcio.parcela / 0.10)} | Financiamento: ${formatar(financiamento.parcela / 0.10)}`;
+            }
+            
+            document.getElementById('requisitos-parcela').innerHTML = htmlParcela;
+            document.getElementById('requisitos-prazo').innerHTML = htmlParcela;
+            document.getElementById('requisitos-custo').innerHTML = htmlParcela;
+            
+            if (posConsorcio && posConsorcio.saldoPagar > 0) {
+                let htmlPos = '';
+                
+                if (tipoCliente === 'PF') {
+                    htmlPos = `<strong>Pós-Contemplação (Pessoa Física):</strong> Renda mínima necessária - Consórcio: ${formatar(posConsorcio.parcela * 3)} | Financiamento: ${formatar(financiamento.parcela * 3)}`;
+                } else {
+                    htmlPos = `<strong>Pós-Contemplação (Pessoa Jurídica):</strong> Faturamento mínimo necessário - Consórcio: ${formatar(posConsorcio.parcela / 0.10)} | Financiamento: ${formatar(financiamento.parcela / 0.10)}`;
+                }
+                
+                document.getElementById('requisitos-pos').innerHTML = htmlPos;
+            }
+        }
+        
+        function compararFinanciamento() {
+            const taxaMensal = parseFloat(document.getElementById('taxa-financiamento').value);
+            const tipoCliente = document.getElementById('tipo-cliente').value;
+            
+            const valorConsorcio = formatarMoedaParaNumero(document.getElementById('valor-credito').value) || 0;
+            const prazoConsorcio = parseInt(document.getElementById('prazo').value) || 0;
+            const parcelaConsorcio = formatarMoedaParaNumero(document.getElementById('primeira-parcela').textContent) || 0;
+            const saldoPagarConsorcio = formatarMoedaParaNumero(document.getElementById('saldo-pagar').textContent) || 0;
+            
+            dadosFinanciamento = calcularFinanciamento(
+                valorConsorcio, 
+                prazoConsorcio, 
+                taxaMensal, 
+                tipoCliente
+            );
+            
+            let dadosFinanciamentoPos = null;
+            if (dadosPosContemplacao && dadosPosContemplacao.saldoPagar > 0) {
+                const valorAbatido = (dadosConsorcio.saldoPagar || 0) - (dadosPosContemplacao.saldoPagar || 0);
+                dadosFinanciamentoPos = calcularFinanciamentoPosContemplacao(
+                    dadosFinanciamento,
+                    valorAbatido
+                );
+            }
+            
+            atualizarRequisitosFinanceiros(dadosConsorcio, dadosFinanciamento, dadosPosContemplacao, dadosFinanciamentoPos);
+            atualizarTabelaComparacao(dadosConsorcio, dadosFinanciamento, dadosPosContemplacao, dadosFinanciamentoPos);
+            atualizarGraficos(dadosConsorcio, dadosFinanciamento, dadosPosContemplacao, dadosFinanciamentoPos);
+        }
+        
+        function atualizarTabelaComparacao(consorcio, financiamento, posConsorcio, posFinanciamento) {
+            const tabela = document.getElementById('tabela-comparacao');
+            let html = '';
+            
+            const formatar = (valor, isCurrency = true) => {
+                if (valor === null || valor === undefined || isNaN(valor)) return '-';
+                if (isCurrency) {
+                    return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                }
+                return valor;
+            };
+            
+            html += `
+                <tr class="consorcio-highlight">
+                    <td>Valor do Crédito</td>
+                    <td>${formatar(consorcio.valorCredito)}</td>
+                    <td>-</td>
+                    <td>${formatar(consorcio.valorCredito - financiamento.valor)}</td>
+                </tr>
+                <tr class="financiamento-highlight">
+                    <td>Valor a Financiar</td>
+                    <td>-</td>                  
+                    <td>${formatar(financiamento.valor)}</td>
+                    <td>-</td>
+                </tr>
+                <tr class="consorcio-highlight">
+                    <td>Prazo (meses)</td>
+                    <td>${consorcio.prazo}</td>
+                    <td>${financiamento.prazo}</td>
+                    <td>${consorcio.prazo - financiamento.prazo}</td>
+                </tr>
+                <tr class="financiamento-highlight">
+                    <td>Valor da Parcela</td>
+                    <td>${formatar(consorcio.parcela)}</td>
+                    <td>${formatar(financiamento.parcela)}</td>
+                    <td>${formatar(consorcio.parcela - financiamento.parcela)}</td>
+                </tr>
+                <tr class="consorcio-highlight">
+                    <td>IOF Normal</td>
+                    <td>-</td>
+                    <td>${formatar(financiamento.iofFixo)}</td>
+                    <td>-</td>
+                </tr>
+                <tr class="financiamento-highlight">
+                    <td>IOF Adicional</td>
+                    <td>-</td>
+                    <td>${formatar(financiamento.iofDiario)}</td>
+                    <td>-</td>
+                </tr>
+                <tr class="consorcio-highlight">
+                    <td>Total IOF</td>
+                    <td>-</td>
+                    <td>${formatar(financiamento.iofTotal)}</td>
+                    <td>-</td>
+                </tr>
+                <tr class="financiamento-highlight">
+                    <td>Total a Pagar</td>
+                    <td>${formatar(consorcio.saldoPagar)}</td>
+                    <td>${formatar(financiamento.totalPagar)}</td>
+                    <td>${formatar(consorcio.saldoPagar - financiamento.totalPagar)}</td>
+                </tr>
+            `;
+            
+            if (posConsorcio && posConsorcio.saldoPagar > 0) {
+                html += `
+                    <tr style="background-color: #f0f0f0;">
+                        <td colspan="4" style="text-align: center; font-weight: bold;">Pós-Contemplação</td>
+                    </tr>
+                    <tr class="consorcio-highlight">
+                        <td>Saldo a Pagar</td>
+                        <td>${formatar(posConsorcio.saldoPagar)}</td>
+                        <td>${posFinanciamento ? formatar(posFinanciamento.valor) : '-'}</td>
+                        <td>${posFinanciamento ? formatar(posConsorcio.saldoPagar - posFinanciamento.valor) : '-'}</td>
+                    </tr>
+                    <tr class="financiamento-highlight">
+                        <td>Novo Prazo (meses)</td>
+                        <td>${posConsorcio.prazo}</td>
+                        <td>${posFinanciamento ? posFinanciamento.prazo : '-'}</td>
+                        <td>${posFinanciamento ? posConsorcio.prazo - posFinanciamento.prazo : '-'}</td>
+                    </tr>
+                    <tr class="consorcio-highlight">
+                        <td>Nova Parcela</td>
+                        <td>${formatar(posConsorcio.parcela)}</td>
+                        <td>${posFinanciamento ? formatar(financiamento.parcela) : '-'}</td>
+                        <td>${posFinanciamento ? formatar(posConsorcio.parcela - financiamento.parcela) : '-'}</td>
+                    </tr>
+                `;
+            }
+            
+            tabela.innerHTML = html;
+        }
+        
+        function atualizarGraficos(consorcio, financiamento, posConsorcio, posFinanciamento) {
+            const cores = ['#3fa110', '#146E37'];
+            const bordas = ['rgba(20, 110, 55, 1)', 'rgba(44, 62, 80, 1)'];
+            
+            Chart.getChart('chartParcelas')?.destroy();
+            Chart.getChart('chartPrazos')?.destroy();
+            Chart.getChart('chartCustos')?.destroy();
+            Chart.getChart('chartPosContemplacao')?.destroy();
+            
+            const ctxParcelas = document.getElementById('chartParcelas').getContext('2d');
+            new Chart(ctxParcelas, {
+                type: 'bar',
+                data: {
+                    labels: ['Consórcio', 'Financiamento'],
+                    datasets: [{
+                        label: 'Valor da Parcela',
+                        data: [consorcio.parcela, financiamento.parcela],
+                        backgroundColor: cores,
+                        borderColor: bordas,
+                        borderWidth: 2,
+                        borderRadius: 5,
+                        borderSkipped: false
+                    }]
+                },
+                options: getOpcoesGrafico('Comparação de Parcelas', 'R$', Math.max(consorcio.parcela, financiamento.parcela))
+            });
+            
+            const ctxPrazos = document.getElementById('chartPrazos').getContext('2d');
+            new Chart(ctxPrazos, {
+                type: 'bar',
+                data: {
+                    labels: ['Consórcio', 'Financiamento'],
+                    datasets: [{
+                        label: 'Prazo (meses)',
+                        data: [consorcio.prazo, financiamento.prazo],
+                        backgroundColor: cores,
+                        borderColor: bordas,
+                        borderWidth: 2,
+                        borderRadius: 5,
+                        borderSkipped: false
+                    }]
+                },
+                options: getOpcoesGrafico('Comparação de Prazos', 'meses', Math.max(consorcio.prazo, financiamento.prazo))
+            });
+            
+            const ctxCustos = document.getElementById('chartCustos').getContext('2d');
+            new Chart(ctxCustos, {
+                type: 'bar',
+                data: {
+                    labels: ['Consórcio', 'Financiamento'],
+                    datasets: [{
+                        label: 'Total a Pagar',
+                        data: [consorcio.saldoPagar, financiamento.totalPagar],
+                        backgroundColor: cores,
+                        borderColor: bordas,
+                        borderWidth: 2,
+                        borderRadius: 5,
+                        borderSkipped: false
+                    }]
+                },
+                options: getOpcoesGrafico('Comparação de Custos Totais', 'R$', Math.max(consorcio.saldoPagar, financiamento.totalPagar))
+            });
+            
+            if (posConsorcio && posConsorcio.saldoPagar > 0 && posFinanciamento) {
+                const ctxPos = document.getElementById('chartPosContemplacao').getContext('2d');
+                new Chart(ctxPos, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Parcela Pós', 'Prazo Pós'],
+                        datasets: [
+                            {
+                                label: 'Consórcio',
+                                data: [posConsorcio.parcela, posConsorcio.prazo],
+                                backgroundColor: cores[0],
+                                borderColor: bordas[0],
+                                borderWidth: 2,
+                                borderRadius: 5
+                            },
+                            {
+                                label: 'Financiamento',
+                                data: [financiamento.parcela, posFinanciamento.prazo],
+                                backgroundColor: cores[1],
+                                borderColor: bordas[1],
+                                borderWidth: 2,
+                                borderRadius: 5
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Valor / Prazo'
+                                },
+                                ticks: {
+                                    callback: function(value) {
+                                        if (typeof value === 'number' && (value === posConsorcio.parcela || value === financiamento.parcela)) {
+                                            return 'R$ ' + value.toLocaleString('pt-BR', { 
+                                                minimumFractionDigits: 2 
+                                            });
+                                        }
+                                        return value;
+                                    }
+                                }
+                            }
+                        },
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Comparação Pós-Contemplação',
+                                font: { size: 16 }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) label += ': ';
+                                        if (context.dataIndex === 0) {
+                                            label += context.raw.toLocaleString('pt-BR', { 
+                                                style: 'currency', 
+                                                currency: 'BRL' 
+                                            });
+                                        } else {
+                                            label += context.raw + ' meses';
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        function calcularStepSize(valorMaximo) {
+            if (valorMaximo <= 10) return 1;
+            if (valorMaximo <= 50) return 5;
+            if (valorMaximo <= 100) return 10;
+            if (valorMaximo <= 500) return 50;
+            if (valorMaximo <= 1000) return 100;
+            if (valorMaximo <= 5000) return 500;
+            if (valorMaximo <= 10000) return 1000;
+            return Math.ceil(valorMaximo / 10);
+        }
+        
+        function getOpcoesGrafico(titulo, eixoY, valorMaximo) {
+            return {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: eixoY,
+                            font: { weight: 'bold' }
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                if (eixoY === 'R$') {
+                                    return 'R$ ' + value.toLocaleString('pt-BR', { 
+                                        minimumFractionDigits: 2 
+                                    });
+                                }
+                                return value;
+                            },
+                            stepSize: calcularStepSize(valorMaximo),
+                            font: { weight: 'bold' }
+                        },
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.1)',
+                            drawBorder: true
+                        }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { font: { weight: 'bold' } }
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: titulo,
+                        font: { size: 16, weight: 'bold' },
+                        padding: { top: 10, bottom: 20 }
+                    },
+                    legend: {
+                        labels: { font: { weight: 'bold' }, padding: 20 }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                        titleFont: { weight: 'bold', size: 14 },
+                        bodyFont: { size: 12 },
+                        padding: 10,
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) label += ': ';
+                                if (eixoY === 'R$') {
+                                    label += context.raw.toLocaleString('pt-BR', { 
+                                        style: 'currency', 
+                                        currency: 'BRL' 
+                                    });
+                                } else {
+                                    label += context.raw;
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                },
+                layout: {
+                    padding: { left: 10, right: 10, top: 10, bottom: 10 }
+                }
+            };
+        }
+
+        // NOVAS FUNÇÕES DE INVESTIMENTO PERSONALIZADO
+        
+        function compararInvestimentoPersonalizado() {
+            // Obter valores dos campos
+            const valorAplicacao = formatarMoedaParaNumero(document.getElementById('valor-aplicacao').value) || 0;
+            const aporteMensal = formatarMoedaParaNumero(document.getElementById('aporte-mensal').value) || 0;
+            const taxaSelic = parseFloat(document.getElementById('taxa-selic').value) || 10.50;
+            const taxaDI = parseFloat(document.getElementById('taxa-di').value) || 10.40;
+            const percentualDI = parseFloat(document.getElementById('percentual-di').value) || 100;
+            
+            // Obter dados do consórcio
+            const valorCredito = formatarMoedaParaNumero(document.getElementById('valor-credito').value) || 0;
+            const prazoMeses = parseInt(document.getElementById('prazo').value) || 0;
+            const parcelaConsorcio = formatarMoedaParaNumero(document.getElementById('primeira-parcela').textContent) || 0;
+            const totalPagarConsorcio = formatarMoedaParaNumero(document.getElementById('saldo-pagar').textContent) || 0;
+            
+            // Calcular investimento com os valores personalizados
+            const investimento = calcularInvestimentoPersonalizado(
+                valorAplicacao,
+                aporteMensal,
+                taxaSelic,
+                taxaDI,
+                percentualDI,
+                prazoMeses
+            );
+            
+            // Cenários alternativos para comparação
+            const investimentoTotal = calcularInvestimentoPersonalizado(
+                valorCredito,
+                0,
+                taxaSelic,
+                taxaDI,
+                percentualDI,
+                prazoMeses
+            );
+            
+            const investimentoParcela = calcularInvestimentoPersonalizado(
+                0,
+                parcelaConsorcio,
+                taxaSelic,
+                taxaDI,
+                percentualDI,
+                prazoMeses
+            );
+            
+            // Atualizar interface
+            atualizarRequisitosInvestimentoPersonalizado(investimento, investimentoTotal, investimentoParcela, valorCredito, parcelaConsorcio, totalPagarConsorcio, valorAplicacao, aporteMensal);
+            atualizarTabelaInvestimentoPersonalizado(valorCredito, totalPagarConsorcio, parcelaConsorcio, investimento, investimentoTotal, investimentoParcela, prazoMeses, valorAplicacao, aporteMensal);
+            atualizarGraficoInvestimentoPersonalizado(investimento, investimentoTotal, investimentoParcela, valorCredito, prazoMeses, valorAplicacao);
+            gerarExplicacaoInvestimentoPersonalizado(valorCredito, totalPagarConsorcio, parcelaConsorcio, investimento, investimentoTotal, investimentoParcela, prazoMeses, valorAplicacao, aporteMensal);
+        }
+
+        function calcularInvestimentoPersonalizado(valorInicial, aporteMensal, taxaSelic, taxaDI, percentualDI, prazoMeses) {
+            // Converter taxas anuais para mensais
+            const selicMensal = Math.pow(1 + (taxaSelic / 100), 1/12) - 1;
+            const taxaAplicacaoMensal = Math.pow(1 + ((taxaDI / 100) * (percentualDI / 100)), 1/12) - 1;
+            
+            let saldo = valorInicial;
+            let totalAportes = 0;
+            let rendimentoAcumulado = 0;
+            const historico = [];
+            
+            for (let mes = 1; mes <= prazoMeses; mes++) {
+                // Rendimento do mês
+                const rendimentoMes = saldo * taxaAplicacaoMensal;
+                saldo += rendimentoMes;
+                
+                // Adicionar aporte mensal
+                if (aporteMensal > 0) {
+                    saldo += aporteMensal;
+                    totalAportes += aporteMensal;
+                }
+                
+                rendimentoAcumulado += rendimentoMes;
+                
+                historico.push({
+                    mes: mes,
+                    saldo: saldo,
+                    rendimentoMes: rendimentoMes,
+                    rendimentoAcumulado: rendimentoAcumulado,
+                    totalAportes: totalAportes,
+                    valorInicial: valorInicial
+                });
+            }
+            
+            const totalInvestido = valorInicial + totalAportes;
+            const rendimentoTotal = saldo - totalInvestido;
+            const percentualRendimento = totalInvestido > 0 ? (rendimentoTotal / totalInvestido) * 100 : 0;
+            
+            return {
+                saldoFinal: saldo,
+                totalInvestido: totalInvestido,
+                rendimentoTotal: rendimentoTotal,
+                percentualRendimento: percentualRendimento,
+                historico: historico,
+                taxaEquivalenteMensal: taxaAplicacaoMensal * 100,
+                taxaEquivalenteAnual: ((Math.pow(1 + taxaAplicacaoMensal, 12) - 1) * 100),
+                valorInicial: valorInicial,
+                aporteMensal: aporteMensal
+            };
+        }
+
+        function atualizarRequisitosInvestimentoPersonalizado(investimento, investimentoTotal, investimentoParcela, valorCredito, parcelaConsorcio, totalConsorcio, valorAplicado, aporteMensal) {
+            const formatar = valor => valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            
+            let html = `
+                <strong>Parâmetros do Investimento:</strong><br>
+                Valor inicial: ${formatar(valorAplicado)}<br>
+                Aporte mensal: ${formatar(aporteMensal)}<br>
+                Prazo: ${investimento.historico.length} meses<br>
+                Taxa equivalente mensal: ${investimento.taxaEquivalenteMensal.toFixed(4)}%<br>
+                Taxa equivalente anual: ${investimento.taxaEquivalenteAnual.toFixed(2)}%<br><br>
+                
+                <strong>Resultado do Investimento:</strong><br>
+                Total investido: ${formatar(investimento.totalInvestido)}<br>
+                Saldo final: ${formatar(investimento.saldoFinal)}<br>
+                Rendimento total: ${formatar(investimento.rendimentoTotal)}<br>
+                Rentabilidade: ${investimento.percentualRendimento.toFixed(2)}%<br><br>
+                
+                <strong>Comparação com Consórcio:</strong><br>
+                Valor do bem: ${formatar(valorCredito)}<br>
+                Custo do consórcio: ${formatar(totalConsorcio)}<br>
+                Diferença: ${formatar(investimento.saldoFinal - totalConsorcio)}<br>
+            `;
+            
+            if (investimento.saldoFinal > totalConsorcio) {
+                html += `<br><span style="color: #146e37;">✅ Investimento supera o consórcio em ${formatar(investimento.saldoFinal - totalConsorcio)}</span>`;
+            } else {
+                html += `<br><span style="color: #ff6b6b;">⚠️ Consórcio supera o investimento em ${formatar(totalConsorcio - investimento.saldoFinal)}</span>`;
+            }
+            
+            document.getElementById('requisitos-investimento').innerHTML = html;
+        }
+
+        function atualizarTabelaInvestimentoPersonalizado(valorCredito, totalConsorcio, parcelaConsorcio, investimento, investimentoTotal, investimentoParcela, prazo, valorAplicado, aporteMensal) {
+            const tabela = document.getElementById('tabela-comparacao-investimento');
+            const formatar = (valor) => valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            
+            let html = `
+                <tr style="background-color: #e8f5e9;">
+                    <td colspan="4" style="text-align: center; font-weight: bold;">Análise Comparativa - Consórcio vs Investimento Personalizado</td>
+                </tr>
+                <tr>
+                    <td>Valor do Bem (Consórcio)</td>
+                    <td>${formatar(valorCredito)}</td>
+                    <td>-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td>Custo Total do Consórcio (${prazo} meses)</td>
+                    <td>${formatar(totalConsorcio)}</td>
+                    <td>-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td>Parcela do Consórcio</td>
+                    <td>${formatar(parcelaConsorcio)}</td>
+                    <td>-</td>
+                    <td>-</td>
+                </tr>
+                <tr style="background-color: #e3f2fd;">
+                    <td colspan="4" style="text-align: center; font-weight: bold;">SEU INVESTIMENTO PERSONALIZADO</td>
+                </tr>
+                <tr>
+                    <td>Valor Inicial Aplicado</td>
+                    <td>-</td>
+                    <td>${formatar(valorAplicado)}</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td>Aporte Mensal</td>
+                    <td>-</td>
+                    <td>${formatar(aporteMensal)}</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td>Total Investido</td>
+                    <td>-</td>
+                    <td>${formatar(investimento.totalInvestido)}</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td>Saldo Final</td>
+                    <td>-</td>
+                    <td>${formatar(investimento.saldoFinal)}</td>
+                    <td>${formatar(investimento.saldoFinal - investimento.totalInvestido)}</td>
+                </tr>
+                <tr>
+                    <td>Rendimento Total</td>
+                    <td>-</td>
+                    <td>${formatar(investimento.rendimentoTotal)}</td>
+                    <td>${investimento.percentualRendimento.toFixed(2)}%</td>
+                </tr>
+                <tr style="background-color: #fff3cd;">
+                    <td colspan="4" style="text-align: center; font-weight: bold;">CENÁRIOS PARA COMPARAÇÃO</td>
+                </tr>
+                <tr style="background-color: #f8f9fa;">
+                    <td colspan="4" style="text-align: center;"><strong>Cenário 1: Investir o valor total do consórcio à vista</strong></td>
+                </tr>
+                <tr>
+                    <td>Investir ${formatar(valorCredito)} à vista</td>
+                    <td>-</td>
+                    <td>${formatar(investimentoTotal.saldoFinal)}</td>
+                    <td>${formatar(investimentoTotal.rendimentoTotal)} (${investimentoTotal.percentualRendimento.toFixed(2)}%)</td>
+                </tr>
+                <tr style="background-color: #f8f9fa;">
+                    <td colspan="4" style="text-align: center;"><strong>Cenário 2: Investir o valor da parcela todo mês</strong></td>
+                </tr>
+                <tr>
+                    <td>Investir ${formatar(parcelaConsorcio)}/mês</td>
+                    <td>-</td>
+                    <td>${formatar(investimentoParcela.saldoFinal)}</td>
+                    <td>${formatar(investimentoParcela.rendimentoTotal)} (${investimentoParcela.percentualRendimento.toFixed(2)}%)</td>
+                </tr>
+            `;
+            
+            // Linha de recomendação
+            html += `<tr style="background-color: #146e37; color: white;">
+                <td colspan="4" style="text-align: center; font-weight: bold;">
+                    RECOMENDAÇÃO: ${investimento.saldoFinal > totalConsorcio ? 
+                        '✅ Invista o dinheiro - rendimento supera o custo do consórcio' : 
+                        '💰 Consórcio pode ser melhor - você precisa do bem agora'}
+                </td>
+            </tr>`;
+            
+            tabela.innerHTML = html;
+        }
+
+        function atualizarGraficoInvestimentoPersonalizado(investimento, investimentoTotal, investimentoParcela, valorCredito, prazo, valorAplicado) {
+            Chart.getChart('chartInvestimento')?.destroy();
+            
+            const ctx = document.getElementById('chartInvestimento').getContext('2d');
+            
+            // Preparar dados para o gráfico
+            const meses = [];
+            const dadosInvestimento = [];
+            const dadosTotal = [];
+            const dadosParcela = [];
+            const linhaValorBem = [];
+            
+            // Pontos para o gráfico (máximo 12 pontos para não poluir)
+            const passo = Math.max(1, Math.floor(prazo / 12));
+            
+            for (let i = 0; i <= prazo; i += passo) {
+                if (i > prazo) i = prazo;
+                meses.push(`Mês ${i}`);
+                
+                // Dados do investimento personalizado
+                const pontoInv = investimento.historico.find(h => h.mes === i) || 
+                                (i === 0 ? { saldo: investimento.valorInicial } : 
+                                i === prazo ? { saldo: investimento.saldoFinal } : null);
+                dadosInvestimento.push(pontoInv ? pontoInv.saldo : 0);
+                
+                // Dados do investimento total
+                const pontoTotal = investimentoTotal.historico.find(h => h.mes === i) || 
+                                  (i === 0 ? { saldo: valorCredito } : 
+                                  i === prazo ? { saldo: investimentoTotal.saldoFinal } : null);
+                dadosTotal.push(pontoTotal ? pontoTotal.saldo : 0);
+                
+                // Dados do investimento parcela
+                const pontoParcela = investimentoParcela.historico.find(h => h.mes === i) || 
+                                    (i === 0 ? { saldo: 0 } : 
+                                    i === prazo ? { saldo: investimentoParcela.saldoFinal } : null);
+                dadosParcela.push(pontoParcela ? pontoParcela.saldo : 0);
+                
+                // Linha do valor do bem
+                linhaValorBem.push(valorCredito);
+                
+                if (i === prazo) break;
+            }
+            
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: meses,
+                    datasets: [
+                        {
+                            label: 'Seu Investimento',
+                            data: dadosInvestimento,
+                            borderColor: '#3fa110',
+                            backgroundColor: 'rgba(63, 161, 16, 0.1)',
+                            borderWidth: 4,
+                            tension: 0.1,
+                            fill: false
+                        },
+                        {
+                            label: 'Investir Valor Total',
+                            data: dadosTotal,
+                            borderColor: '#146E37',
+                            backgroundColor: 'rgba(20, 110, 55, 0.1)',
+                            borderWidth: 3,
+                            borderDash: [5, 5],
+                            tension: 0.1,
+                            fill: false
+                        },
+                        {
+                            label: 'Investir Parcela',
+                            data: dadosParcela,
+                            borderColor: '#ff6b6b',
+                            backgroundColor: 'rgba(255, 107, 107, 0.1)',
+                            borderWidth: 3,
+                            borderDash: [5, 5],
+                            tension: 0.1,
+                            fill: false
+                        },
+                        {
+                            label: 'Valor do Bem',
+                            data: linhaValorBem,
+                            borderColor: '#000000',
+                            borderWidth: 2,
+                            borderDash: [10, 5],
+                            pointRadius: 0,
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Saldo (R$)',
+                                font: { weight: 'bold' }
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return 'R$ ' + value.toLocaleString('pt-BR', { 
+                                        minimumFractionDigits: 0,
+                                        maximumFractionDigits: 0
+                                    });
+                                }
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Período (meses)',
+                                font: { weight: 'bold' }
+                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Evolução do Seu Investimento vs Consórcio',
+                            font: { size: 16, weight: 'bold' }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) label += ': ';
+                                    label += context.raw.toLocaleString('pt-BR', { 
+                                        style: 'currency', 
+                                        currency: 'BRL',
+                                        minimumFractionDigits: 2
+                                    });
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function gerarExplicacaoInvestimentoPersonalizado(valorCredito, totalConsorcio, parcelaConsorcio, investimento, investimentoTotal, investimentoParcela, prazo, valorAplicado, aporteMensal) {
+            const formatar = valor => valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            
+            let explicacao = '';
+            const custoConsorcio = totalConsorcio - valorCredito;
+            const diferenca = investimento.saldoFinal - totalConsorcio;
+            const percentualDiferenca = totalConsorcio > 0 ? ((investimento.saldoFinal / totalConsorcio) - 1) * 100 : 0;
+            
+            explicacao += `<p>📊 <strong>Análise para ${formatar(valorCredito)} em ${prazo} meses:</strong></p>`;
+            
+            // Análise do investimento personalizado vs consórcio
+            if (diferenca > 0) {
+                explicacao += `<p>✅ <strong>Seu investimento é vantajoso!</strong> Com ${formatar(valorAplicado)} iniciais + ${formatar(aporteMensal)}/mês, você terá ${formatar(investimento.saldoFinal)} no final, superando o consórcio em ${formatar(diferenca)} (${percentualDiferenca.toFixed(2)}% a mais).</p>`;
+            } else {
+                explicacao += `<p>⚠️ <strong>Consórcio pode ser melhor</strong> Seu investimento final de ${formatar(investimento.saldoFinal)} é ${formatar(Math.abs(diferenca))} menor que o custo do consórcio (${formatar(totalConsorcio)}). Se precisa do bem agora, o consórcio é mais indicado.</p>`;
+            }
+            
+            // Comparação com outros cenários
+            if (investimentoTotal.saldoFinal > totalConsorcio) {
+                explicacao += `<p>💰 <strong>Se pudesse investir o valor total:</strong> Com ${formatar(valorCredito)} investidos, você teria ${formatar(investimentoTotal.saldoFinal)} - ${formatar(investimentoTotal.rendimentoTotal)} de rendimento.</p>`;
+            }
+            
+            if (investimentoParcela.saldoFinal > totalConsorcio) {
+                explicacao += `<p>💵 <strong>Se investisse apenas as parcelas:</strong> Aportando ${formatar(parcelaConsorcio)}/mês, acumularia ${formatar(investimentoParcela.saldoFinal)}.</p>`;
+            }
+            
+            // Recomendação final
+            if (investimento.saldoFinal > totalConsorcio && investimento.saldoFinal > investimentoTotal.saldoFinal) {
+                explicacao += `<p>🏆 <strong>Sua estratégia é a melhor!</strong> Combinar ${formatar(valorAplicado)} iniciais com aportes de ${formatar(aporteMensal)}/mês é o cenário mais rentável.</p>`;
+            } else if (investimentoTotal.saldoFinal > investimento.saldoFinal && investimentoTotal.saldoFinal > totalConsorcio) {
+                explicacao += `<p>🎯 <strong>Melhor cenário possível:</strong> Investir o valor total de ${formatar(valorCredito)} à vista e comprar o bem depois, gerando ${formatar(investimentoTotal.saldoFinal - totalConsorcio)} de ganho extra.</p>`;
+            }
+            
+            document.getElementById('explicacao-investimento').innerHTML = `<h4>Análise Personalizada</h4>${explicacao}`;
+        }
+    </script>
+</body>
+</html>
