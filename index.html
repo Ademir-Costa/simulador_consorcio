@@ -476,6 +476,21 @@
         };
 
         // Função para calcular o CET (Custo Efetivo Total)
+        function getDescontoAplicado() {
+            const descontoInput = document.getElementById('desconto');
+            const desconto = parseFloat(descontoInput.value.replace('%', '').replace(',', '.')) || 0;
+            return Math.min(Math.max(desconto, 0), 100);
+        }
+
+        function calcularCustoPrestamistaTotal(saldoBase, prazoRestante, prestamistaAtivo) {
+            if (!prestamistaAtivo || saldoBase <= 0 || prazoRestante <= 0) {
+                return 0;
+            }
+
+            const taxaPrestamista = getTaxaPrestamista();
+            return saldoBase * taxaPrestamista * ((prazoRestante - 1) / 2);
+        }
+
         function calcularCET() {
             const valorCredito = parseFloat(document.getElementById('valor-credito').value.replace(/\./g, '').replace(',', '.')) || 0;
             const prazo = parseInt(document.getElementById('prazo').value) || 0;
@@ -487,20 +502,14 @@
                 return;
             }
             
-            const descontoInput = document.getElementById('desconto');
-            const desconto = parseFloat(descontoInput.value.replace('%', '').replace(',', '.')) || 0;
+            const taxaTotal = parseFloat(document.getElementById('taxa-total').textContent.replace('%', '').replace(',', '.')) || 0;
             
             // Taxa de administração com desconto
-            const taxaAdmEfetiva = taxas.adm * (1 - desconto / 100);
+            const saldoPagar = valorCredito * (1 + (taxaTotal / 100));
             
             // CET = Taxa de Administração + Fundo de Reserva + (Custo do Prestamista anualizado)
-            let cet = taxaAdmEfetiva + taxas.fr;
-            
-            if (prestamistaAtivo) {
-                // Converte a taxa mensal do prestamista para custo total sobre o prazo
-                const custoPrestamistaAnual = (taxas.prestamista * 12);
-                cet += custoPrestamistaAnual;
-            }
+            const custoPrestamistaTotal = calcularCustoPrestamistaTotal(saldoPagar, prazo, prestamistaAtivo);
+            const cet = (((saldoPagar + custoPrestamistaTotal) - valorCredito) / valorCredito) * 100;
             
             document.getElementById('cet').textContent = cet.toFixed(2).replace('.', ',') + '%';
         }
@@ -657,11 +666,9 @@
                     document.getElementById('prazo').value = prazoMatch[0];
                 }
 
-                const descontoInput = document.getElementById('desconto');
-                let desconto = parseFloat(descontoInput.value.replace('%', '').replace(',', '.')) || 0;
+                const desconto = getDescontoAplicado();
                 
                 // Garantir que o desconto não ultrapasse 100%
-                if (desconto > 100) desconto = 100;
                 
                 const taxaAdmDescontada = taxas.adm * (1 - desconto / 100);
                 const taxaTotal = taxaAdmDescontada + taxas.fr;
